@@ -215,7 +215,6 @@
 
     for($i=5;$i -lt $AllScopes.Length-3;$i++){
 	    $line = ([string]($AllScopes[$i])).Split("-")
-        If(!((Check-Empty $line[0]) -eq ("192.168.80.0"))){
 	        $Scope.Address += Check-Empty $line[0]
 	        $Scope.Mask += Check-Empty $line[1]
 	        $Scope.State += Check-Empty $line[2]
@@ -225,7 +224,6 @@
 	        else { 
                 $Scope.Name += Check-Empty $line[3] 
             }
-        }
     }
 
     $ScopesIP = $Scope | Where { $_.State -eq "Active" } | Select Address
