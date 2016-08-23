@@ -1,2 +1,4 @@
 New-Lease-Notifier-DHCP-
-Creates a log of MAC addresses from DHCP server. When run multiple times, this script will detect any new DHCP leases by comparing with the previously created log, notify sysadmin via email, and update its log with relevant values from the lease. Use with Windows Task Scheduler for best results. Requires Windows Remote Server Administration Tools. Be sure to modify server, directory and email notification information.
+Creates a log of MAC addresses from DHCP server. When run multiple times, this script will detect any new DHCP leases by comparing with the previously created log, notify sysadmin via email, and update its log with relevant values from the lease.
+Verified working on PowerShell version 5+ on Windows Server 2008 r2, Windows 7 Professional sp1 and sp2, and Windows 10. 
+Be sure to have Windows Remote Server Administration Tools and to modify the information located within the first two regions of the script to suit your needs.
