@@ -1,4 +1,4 @@
-﻿# MAC DHCP Notify
+# MAC DHCP Notify
 # Lukas Velikov (modified from Assaf Miron's Get-DHCPLeases script)
 #
 # Creates a log of MAC addresses from DHCP server. When run multiple
