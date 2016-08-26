@@ -1,5 +1,11 @@
-# MAC DHCP Notify
-# Lukas Velikov (modified from Assaf Miron's Get-DHCPLeases script)
+# New DHCP Notification
+# Lukas Velikov
+#
+# A portion of this script has code taken from Assaf Miron's get-DHCP
+# leases script. I thinned out his script, getting rid of the scope and
+# reserved logs altogether, and built from there. Miron's script can 
+# be found at:
+# https://sites.google.com/site/assafmiron/ServerScripts/get-dhcpleases
 #
 # Creates a log of MAC addresses from DHCP server. When run multiple
 # times, this script will detect any new DHCP leases by comparing with 
