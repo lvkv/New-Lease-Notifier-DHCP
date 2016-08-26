@@ -10,7 +10,9 @@
 # Creates a log of MAC addresses from DHCP server. When run multiple
 # times, this script will detect any new DHCP leases by comparing with 
 # a previously created log, notify sysadminvia email, and update its 
-# log with relevant values from the lease. Best when automated.
+# log with relevant values from the lease. Best when automated. 
+# I got region happy with this code, so try viewing in Notepad++ or
+# PowerShell ISE too see just how far it goes.
 
 
 #region Server and directory information
