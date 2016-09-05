@@ -7,12 +7,12 @@
 # be found at:
 # https://sites.google.com/site/assafmiron/ServerScripts/get-dhcpleases
 #
-# Creates a log of MAC addresses from DHCP server. When run multiple
-# times, this script will detect any new DHCP leases by comparing with 
+# This creates a log of MAC addresses from DHCP server. When run 
+# multiple times, it will detect any new DHCP leases by comparing with 
 # a previously created log, notify sysadmin via email, and update its 
-# log with relevant values from the lease. Best when automated. 
-# I got region happy with this code, try viewing in Notepad++ or
-# PowerShell ISE to see how far it goes.
+# log with relevant values from the lease. Best when automated using  
+# Windows Task Scheduler. I got region happy with this code, try viewing 
+# in Notepad++ or PowerShell ISE to see how far it goes.
 
 
 #region Server and directory information
@@ -21,6 +21,8 @@
     $LOG_FOLDER = "C:\MAC_NOTIFY_LOGS"
     $MACsLog = $LOG_FOLDER+"\macLog.csv"
     $LeaseLog = $LOG_FOLDER+"\LeaseLog.csv"
+    #Scopes in this array will not be monitored
+    $scopeLimits = @("192.166.66.6")  #Fake example scope
 
     #If directory does not exist, create it
     If(!(test-path $LOG_FOLDER)){
@@ -48,7 +50,6 @@
         $Scope | Add-Member noteproperty "Mask" ""
         $Scope | Add-Member noteproperty "State" ""
         $Scope | Add-Member noteproperty "Name" ""
-        
 
         $Scope.Address = @()
         $Scope.Mask = @()
@@ -168,7 +169,7 @@
 		    $macDestination = $LOG_FOLDER+"\macLog.csv"
 	    }
         # Removing duplicate entries (if they ever arise)
-	    Import-Csv $LeaseLog | select MAC | sort MAC -Unique | Export-Csv -Path $macDestination –NoTypeInformation
+	    Import-Csv $LeaseLog | select MAC | sort MAC -Unique | Export-Csv -Path $macDestination -NoTypeInformation
 	    Remove-Item $LeaseLog
     }
 
@@ -220,18 +221,27 @@
 
     #Run the command in the show scopes var
     $AllScopes = Invoke-Expression $ShowScopes
-
+    $skip = $false
     for($i=5;$i -lt $AllScopes.Length-3;$i++){
 	    $line = ([string]($AllScopes[$i])).Split("-")
-	        $Scope.Address += Check-Empty $line[0]
-	        $Scope.Mask += Check-Empty $line[1]
-	        $Scope.State += Check-Empty $line[2]
-	        If (Check-Empty $line[3] -eq "-"){
-		        $Scope.Name += Check-Empty $line[4]
-	        }
-	        else { 
-                $Scope.Name += Check-Empty $line[3] 
+        ForEach ($sco In $scopeLimits){
+            If(Check-Empty $line[0] -eq $sco){
+                $skip = $true
             }
+        }
+        If($skip){
+            $skip = $false
+            continue
+        }
+	    $Scope.Address += Check-Empty $line[0]
+	    $Scope.Mask += Check-Empty $line[1]
+	    $Scope.State += Check-Empty $line[2]
+	    If (Check-Empty $line[3] -eq "-"){
+		    $Scope.Name += Check-Empty $line[4]
+	    }
+	    else { 
+            $Scope.Name += Check-Empty $line[3] 
+        }
     }
 
     $ScopesIP = $Scope | Where { $_.State -eq "Active" } | Select Address
