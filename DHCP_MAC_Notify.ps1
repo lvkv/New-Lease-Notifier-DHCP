@@ -202,7 +202,7 @@
 	    }
     }
 
-    function string-format([string]$str){
+    function Format-MACString([string]$str){
     # Input: String $str, which is anticipated to be a MAC address converted from a CSV PSCustomObject
     # Output: A string without PSCustomObject | Out-String formatting
     # Description: Takes a formatted MAC address string and trims the fat, leaving only the address
@@ -297,24 +297,24 @@
 	
         #region Temporary file destinations
 
-	        $f1 = $LOG_FOLDER+"\macLog.csv" 
-	        $f2 = $LOG_FOLDER+"\macLog2.csv"
-	        $f3 = $LOG_FOLDER+"\macLog_2.csv"
+	        $TempFile_1 = $LOG_FOLDER+"\macLog.csv" 
+	        $TempFile_2 = $LOG_FOLDER+"\macLog2.csv"
+	        $TempFile_3 = $LOG_FOLDER+"\macLog_2.csv"
 	        $cDest = $LOG_FOLDER+"\difference.csv"
 
         #endregion
 	
         #region Sorting, removing duplicates and cleanup
 
-	        Import-Csv $f2 | sort MAC -Unique | Export-Csv -Path $f3 -NoTypeInformation
-	        Remove-Item $f2
+	        Import-Csv $TempFile_2 | sort MAC -Unique | Export-Csv -Path $TempFile_3 -NoTypeInformation
+	        Remove-Item $TempFile_2
 
         #endregion
 	
 	    #region Comparing base to new log and saving differences
 
-	        Compare-Object (Get-Content $f1) (Get-Content $f3) | Where-Object { $_.SideIndicator -eq '=>' } | select InputObject |Select-Object @{ expression={$_.InputObject}; label="MAC" } | Export-Csv -Path $cDest -NoTypeInformation
-            Remove-Item $f3
+	        Compare-Object (Get-Content $TempFile_1) (Get-Content $TempFile_3) | Where-Object { $_.SideIndicator -eq '=>' } | select InputObject |Select-Object @{ expression={$_.InputObject}; label="MAC" } | Export-Csv -Path $cDest -NoTypeInformation
+            Remove-Item $TempFile_3
 
         #endregion
 
@@ -337,7 +337,7 @@
                     Foreach($newMAC in $newMACS){
                         $counter = 0
                         Foreach($logMAC in $logMACs){
-                            If((string-format $logMAC) -eq (string-format $newMAC)){
+                            If((Format-MACString $logMAC) -eq (Format-MACString $newMAC)){
                                 $infoIndexes += $counter
                             }
                             $counter += 1
@@ -356,11 +356,11 @@
 
                 #region Updating log
 
-                    $tempMACM = Import-Csv $f1
+                    $tempMACM = Import-Csv $TempFile_1
                     $tempLogM = $logMACs
                     $overWrite = $tempMACM + $tempLogM
-                    Remove-Item $f1
-                    $overwrite | sort MAC -Unique | Export-Csv $f1 -NoTypeInformation
+                    Remove-Item $TempFile_1
+                    $overwrite | sort MAC -Unique | Export-Csv $TempFile_1 -NoTypeInformation
 
                 #endregion
 
