@@ -17,7 +17,7 @@
 
 #region Server and directory information
 
-    $DHCP_SERVER = "pvadc01.pva.local"
+    $DHCP_SERVER = "EXAMPLE01.EXAMPLE.local"
     $LOG_FOLDER = "C:\MAC_NOTIFY_LOGS"
     $MACsLog = $LOG_FOLDER+"\macLog.csv"
     $LeaseLog = $LOG_FOLDER+"\LeaseLog.csv"
@@ -33,11 +33,11 @@
 
 #region Email notification information
 
-    $sysAdmin = "LVelikov@PVA.net"
+    $sysAdmin = "LVelikov@company.net"
     $subject = "New DHCP Entries"
     $body = "The following entries have been detected and added to the log:`n"
-    $from = "do-not-reply@pvadc01"
-    $smtp = "PVAMail2kx.PVA.local"
+    $from = "do-not-reply@company.net"
+    $smtp = "EXAMPLEMail.EXAMPLE.local"
 
 #endregion
 
